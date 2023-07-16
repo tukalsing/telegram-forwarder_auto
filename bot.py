@@ -10,7 +10,6 @@
 #    General Public License for more details.
 # 
 #    License can be found in < https://github.com/Ayush7445/telegram-auto_forwarder/blob/main/License > .
-
 from telethon import TelegramClient, events
 from decouple import config
 import logging
@@ -38,17 +37,17 @@ except Exception as ap:
 
 @BotzHubUser.on(events.NewMessage(incoming=True, chats=FROM))
 async def sender_bH(event):
-    # Check if the incoming message contains a video
-    if event.media and (event.media.document.mime_type == 'video/mp4' or event.media.document.mime_type == 'video/x-matroska'):
+    if event.message.video:  # Only forward if the message contains a video
         for i in TO:
             try:
-                await BotzHubUser.forward_messages(
-                    entity=i,
-                    messages=event.message
+                await BotzHubUser.send_message(
+                    i,
+                    event.message
                 )
-                print(f"Forwarded video to {i}")
+                print(f"Video forwarded from {event.chat_id} to {i}")
             except Exception as e:
                 print(e)
 
 print("Bot has started.")
 BotzHubUser.run_until_disconnected()
+    
