@@ -20,7 +20,6 @@ logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s'
 
 print("Starting...")
 
-# Basics
 APP_ID = config("APP_ID", default=None, cast=int)
 API_HASH = config("API_HASH", default=None)
 SESSION = config("SESSION")
@@ -39,14 +38,17 @@ except Exception as ap:
 
 @BotzHubUser.on(events.NewMessage(incoming=True, chats=FROM))
 async def sender_bH(event):
-    for i in TO:
-        try:
-            await BotzHubUser.send_message(
-                i,
-                event.message
-            )
-        except Exception as e:
-            print(e)
+    # Check if the incoming message contains a video
+    if event.media and (event.media.document.mime_type == 'video/mp4' or event.media.document.mime_type == 'video/x-matroska'):
+        for i in TO:
+            try:
+                await BotzHubUser.forward_messages(
+                    entity=i,
+                    messages=event.message
+                )
+                print(f"Forwarded video to {i}")
+            except Exception as e:
+                print(e)
 
 print("Bot has started.")
 BotzHubUser.run_until_disconnected()
