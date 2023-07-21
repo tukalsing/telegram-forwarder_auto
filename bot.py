@@ -12,7 +12,7 @@ API_HASH = config("API_HASH", default=None)
 SESSION = config("SESSION")
 FROM_ = config("FROM_CHANNEL")
 TO_ = config("TO_CHANNEL")
-# add channel or userchat id
+# add channel or user chat id
 FROM = [int(i) for i in FROM_.split()]
 TO = [int(i) for i in TO_.split()]
 
@@ -23,27 +23,15 @@ except Exception as ap:
     print(f"ERROR - {ap}")
     exit(1)
 
-# Remove forwarded tag from the message and forward from user chat to channel
+# Forward messages from user chats and channels to the specified destination channels
 @BotzHubUser.on(events.NewMessage(incoming=True, chats=FROM))
-async def forward_userchat_to_channel(event):
+async def forward_to_channels(event):
     if event.message.video:
         try:
             for chat_id in TO:
                 # Forward the message without the via_bot_id attribute
                 await event.message.forward_to(chat_id)
-                print(f"Video forwarded from user chat {event.chat_id} to channel {chat_id}")
-        except Exception as e:
-            print(e)
-
-# Remove forwarded tag from the message and forward from channel to multiple channels
-@BotzHubUser.on(events.NewMessage(incoming=True, chats=FROM))
-async def forward_channel_to_channels(event):
-    if event.message.video:
-        try:
-            for chat_id in TO:
-                # Forward the message without the via_bot_id attribute
-                await event.message.forward_to(chat_id)
-                print(f"Video forwarded from channel {event.chat_id} to channel {chat_id}")
+                print(f"Video forwarded from {event.chat_id} to {chat_id}")
         except Exception as e:
             print(e)
 
