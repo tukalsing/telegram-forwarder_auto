@@ -24,12 +24,12 @@ except Exception as ap:
     exit(1)
 
 # Forward messages from user chats and channels to the specified destination channels
-@BotzHubUser.on(events.NewMessage(incoming=True, chats=FROM))
+@BotzHubUser.on(events.NewMessage(chats=FROM))
 async def forward_to_channels(event):
     if event.message.video:
         try:
             for chat_id in TO:
-                await BotzHubUser.forward_messages(chat_id, [event.message], silent=True)
+                await BotzHubUser.send_file(chat_id, event.message.media)
                 print(f"Video forwarded from {event.chat_id} to {chat_id}")
         except Exception as e:
             print(e)
