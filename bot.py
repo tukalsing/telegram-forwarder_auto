@@ -28,8 +28,9 @@ except Exception as ap:
 async def forward_userchat_to_channel(event):
     if event.message.video:
         try:
-            await BotzHubUser.forward_messages(TO, event.message)
-            print(f"Video forwarded from user chat {event.chat_id} to channels: {TO}")
+            for chat_id in TO:
+                await BotzHubUser.forward_messages(chat_id, event.message)
+                print(f"Video forwarded from user chat {event.chat_id} to channel {chat_id}")
         except Exception as e:
             print(e)
 
@@ -38,10 +39,12 @@ async def forward_userchat_to_channel(event):
 async def forward_channel_to_channels(event):
     if event.message.video:
         try:
-            await BotzHubUser.forward_messages(TO, event.message)
-            print(f"Video forwarded from channel {event.chat_id} to channels: {TO}")
+            for chat_id in TO:
+                await BotzHubUser.forward_messages(chat_id, event.message)
+                print(f"Video forwarded from channel {event.chat_id} to channel {chat_id}")
         except Exception as e:
             print(e)
 
 print("Bot has started.")
 BotzHubUser.run_until_disconnected()
+
