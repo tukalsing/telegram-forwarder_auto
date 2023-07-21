@@ -23,28 +23,31 @@ except Exception as ap:
     print(f"ERROR - {ap}")
     exit(1)
 
-# Add forward from user chat to channel by using the forward_messages method
+# Remove forwarded tag from the message and forward from user chat to channel
 @BotzHubUser.on(events.NewMessage(incoming=True, chats=FROM))
 async def forward_userchat_to_channel(event):
     if event.message.video:
         try:
             for chat_id in TO:
-                await BotzHubUser.forward_messages(chat_id, event.message)
+                # Create a new message object without the via_bot_id attribute
+                new_message = await event.message.copy(chat_id)
+                await BotzHubUser.send_message(chat_id, new_message)
                 print(f"Video forwarded from user chat {event.chat_id} to channel {chat_id}")
         except Exception as e:
             print(e)
 
-# Add forward from channel to multiple channels using the forward_messages method
+# Remove forwarded tag from the message and forward from channel to multiple channels
 @BotzHubUser.on(events.NewMessage(incoming=True, chats=FROM))
 async def forward_channel_to_channels(event):
     if event.message.video:
         try:
             for chat_id in TO:
-                await BotzHubUser.forward_messages(chat_id, event.message)
+                # Create a new message object without the via_bot_id attribute
+                new_message = await event.message.copy(chat_id)
+                await BotzHubUser.send_message(chat_id, new_message)
                 print(f"Video forwarded from channel {event.chat_id} to channel {chat_id}")
         except Exception as e:
             print(e)
 
 print("Bot has started.")
 BotzHubUser.run_until_disconnected()
-
