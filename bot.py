@@ -28,8 +28,9 @@ except Exception as ap:
 async def forward_to_channels(event):
     if event.message.video:
         try:
+            caption_text = event.message.caption
             for chat_id in TO:
-                await BotzHubUser.send_file(chat_id, event.message.media)
+                await BotzHubUser.send_file(chat_id, event.message.media, caption=caption_text)
                 print(f"Video forwarded from {event.chat_id} to {chat_id}")
         except Exception as e:
             print(e)
