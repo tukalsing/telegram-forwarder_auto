@@ -29,9 +29,8 @@ async def forward_userchat_to_channel(event):
     if event.message.video:
         try:
             for chat_id in TO:
-                # Create a new message object without the via_bot_id attribute
-                new_message = await event.message.copy(chat_id)
-                await BotzHubUser.send_message(chat_id, new_message)
+                # Forward the message without the via_bot_id attribute
+                await event.message.forward_to(chat_id)
                 print(f"Video forwarded from user chat {event.chat_id} to channel {chat_id}")
         except Exception as e:
             print(e)
@@ -42,9 +41,8 @@ async def forward_channel_to_channels(event):
     if event.message.video:
         try:
             for chat_id in TO:
-                # Create a new message object without the via_bot_id attribute
-                new_message = await event.message.copy(chat_id)
-                await BotzHubUser.send_message(chat_id, new_message)
+                # Forward the message without the via_bot_id attribute
+                await event.message.forward_to(chat_id)
                 print(f"Video forwarded from channel {event.chat_id} to channel {chat_id}")
         except Exception as e:
             print(e)
