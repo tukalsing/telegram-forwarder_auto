@@ -29,7 +29,7 @@ async def forward_to_channels(event):
     if event.message.video:
         try:
             for chat_id in TO:
-                await BotzHubUser.send_message(chat_id, event.message, forward=None)
+                await BotzHubUser.send_message(chat_id, event.message.file)
                 print(f"Video forwarded from {event.chat_id} to {chat_id}")
         except Exception as e:
             print(e)
